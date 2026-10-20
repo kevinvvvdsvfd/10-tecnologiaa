@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Innovar y emprender 10°</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Cuaderno de campo: una columna de lectura, navegación por pasos arriba, verde potrero + amarillo maíz */
+:root{
+  --bg:#F2F5F3; --surface:#FFFFFF; --surface2:#E6EEE9; --ink:#14211C; --muted:#55665E; --line:#CAD7CF;
+  --accent:#2E6B45; --accent-ink:#FFFFFF; --maiz:#9A6B0C; --maiz-soft:#F5EACB;
+  --ok:#2E7D4F; --ok-soft:#DCEFE3; --bad:#B3261E; --bad-soft:#F7E0DD;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1613; --surface:#16201C; --surface2:#1E2A25; --ink:#E4EDE8; --muted:#9DB0A7; --line:#2E3E37;
+  --accent:#7CC796; --accent-ink:#0F1613; --maiz:#E2B54A; --maiz-soft:#3A311A;
+  --ok:#7CC796; --ok-soft:#1D3527; --bad:#F08A80; --bad-soft:#3D201C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1613; --surface:#16201C; --surface2:#1E2A25; --ink:#E4EDE8; --muted:#9DB0A7; --line:#2E3E37;
+  --accent:#7CC796; --accent-ink:#0F1613; --maiz:#E2B54A; --maiz-soft:#3A311A;
+  --ok:#7CC796; --ok-soft:#1D3527; --bad:#F08A80; --bad-soft:#3D201C; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body)}
+[hidden]{display:none!important}
+.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(30px,5.5vw,46px);font-weight:800;letter-spacing:-.01em}
+h2{font-size:clamp(24px,3.6vw,30px);font-weight:700}
+h3{font-size:20px;font-weight:700}
+p{margin:0}
+.label{font:500 12px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+a{color:var(--accent)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--maiz);outline-offset:2px}
+
+/* Encabezado */
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{padding-block:28px 22px;display:grid;gap:14px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--muted);font-size:15px}
+.meta b{color:var(--ink);font-weight:600}
+.lead{font-size:19px;max-width:62ch;color:var(--muted)}
+
+/* Pasos */
+.steps{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.steps .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:thin}
+.step{flex:0 0 auto;display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px 7px 8px;font-weight:600;font-size:15px}
+.step .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);font:500 12px var(--mono)}
+.step[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.step[aria-current="true"] .n{background:var(--accent-ink);color:var(--accent)}
+.step .done{font-size:12px;color:var(--ok)}
+.step[aria-current="true"] .done{color:var(--accent-ink)}
+
+main .wrap{padding-block:34px 60px}
+section.panel{display:grid;gap:30px}
+.block{display:grid;gap:12px}
+.block p,.block li{max-width:68ch}
+.block ul,.block ol{margin:0;padding-left:22px;display:grid;gap:6px}
+.key{border-left:4px solid var(--maiz);background:var(--maiz-soft);padding:14px 18px;border-radius:0 8px 8px 0;font-size:18px}
+
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:8px;align-content:start;min-width:0}
+.card .label{color:var(--accent)}
+.ex{font-size:15px;color:var(--muted)}
+.ex b{color:var(--ink)}
+
+.scale{display:grid;gap:10px}
+.scale-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--surface2),var(--maiz))}
+.scale-ends{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+
+.cycle{list-style:none;padding:0!important;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.cycle li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:4px;align-content:start}
+.cycle .n{font:500 13px var(--mono);color:var(--maiz)}
+.cycle b{font-family:var(--display);font-size:17px}
+.cycle span{font-size:15px;color:var(--muted)}
+
+/* Clasificador */
+.sorter{display:grid;gap:10px}
+.sort-item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:10px}
+.sort-item .btns{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:999px;padding:6px 14px;font-size:15px;font-weight:600}
+.chip:hover{border-color:var(--accent)}
+.fb{font-size:15px;padding:8px 12px;border-radius:8px}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--display);font-size:15px;background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+
+.canvas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:640px){.canvas{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.canvas{grid-template-columns:1fr}}
+.canvas .cell{background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:12px;display:grid;gap:4px;align-content:start;font-size:15px;min-width:0}
+.canvas .cell .label{color:var(--accent)}
+
+.nav-bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:20px}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:11px 18px;font-weight:700;font-size:16px}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.warn{border-color:var(--bad);background:transparent;color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Taller */
+.item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:grid;gap:14px}
+.item header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.item .code{font:500 13px var(--mono);color:var(--accent-ink);background:var(--accent);padding:2px 8px;border-radius:4px}
+.item .pts{margin-left:auto;font:500 12px var(--mono);color:var(--muted)}
+.caso{background:var(--surface2);border-radius:8px;padding:14px 16px;font-size:16px}
+.field{display:grid;gap:6px}
+.field label{font-weight:600;font-size:15px}
+textarea,input[type=text],input[type=date]{width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+textarea:focus,input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.preview{border:1px solid var(--maiz);background:var(--maiz-soft);border-radius:8px;padding:12px 14px;font-size:16px}
+.parte{display:flex;align-items:center;gap:12px}
+.parte::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* Quiz */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;gap:10px;margin:0}
+.q legend{font-weight:700;font-size:17px;padding:0;margin-bottom:6px;display:flex;gap:10px}
+.q legend .n{font:500 13px var(--mono);color:var(--maiz);padding-top:4px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 10px;border-radius:8px;border:1px solid transparent}
+.opt:hover{background:var(--surface2)}
+.opt input{margin-top:5px;accent-color:var(--accent)}
+.opt.correct{background:var(--ok-soft);border-color:var(--ok)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.score{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:16px 20px}
+.score .big{font:800 36px var(--display);font-variant-numeric:tabular-nums}
+
+/* Entrega */
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.status{display:grid;gap:8px;list-style:none;padding:0!important}
+.status li{display:flex;gap:10px;align-items:center;font-size:16px}
+.dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;background:var(--line)}
+.dot.ok{background:var(--ok)}.dot.half{background:var(--maiz)}
+.msg{padding:12px 14px;border-radius:8px;font-size:16px}
+.msg.ok{background:var(--ok-soft);color:var(--ok)}
+.msg.bad{background:var(--bad-soft);color:var(--bad)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.small{font-size:14px;color:var(--muted)}
+footer{border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+footer .wrap{padding-block:20px}
+@media (prefers-reduced-motion:no-preference){.panel{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="label">Institución Educativa John F. Kennedy · San Juanito, Meta</span>
+    <h1>Innovar y emprender con tecnología</h1>
+    <p class="lead">Guía de los dos primeros contenidos del cuarto periodo. Lee la explicación, resuelve el taller, presenta el quiz y al final descarga el archivo con tus respuestas para entregarlo.</p>
+    <div class="meta">
+      <span>Área: <b>Tecnología e Informática</b></span>
+      <span>Grado: <b>Décimo</b></span>
+      <span>Periodo: <b>4 · 2026</b></span>
+      <span>Docente: <b>Kevin Castillo</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="steps" aria-label="Partes de la guía">
+  <div class="wrap" id="steps"></div>
+</nav>
+
+<main>
+<div class="wrap">
+
+<!-- ============ 1. INNOVACIÓN ============ -->
+<section class="panel" id="sec-innovacion" data-title="Innovación tecnológica">
+  <div class="block">
+    <span class="label">Contenido 1</span>
+    <h2>Innovación tecnológica</h2>
+    <p>Innovar es llevar una idea nueva, o una mejora, hasta el punto en que la gente la usa y le sirve. Lo que define la innovación es el uso: una idea que se queda en el cuaderno todavía no ha innovado nada.</p>
+    <p class="key">Innovación = idea nueva o mejorada + uso real + valor para alguien.</p>
+  </div>
+
+  <div class="block">
+    <h3>Invento no es lo mismo que innovación</h3>
+    <div class="duo">
+      <div class="card">
+        <span class="label">Invento</span>
+        <p>Crear algo que antes no existía: un aparato, un material, un método. Puede quedarse en un laboratorio o en una patente sin que nadie lo use.</p>
+        <p class="ex"><b>Ejemplo:</b> el primer motor eléctrico.</p>
+      </div>
+      <div class="card">
+        <span class="label">Innovación</span>
+        <p>Que una idea, propia o ajena, llegue a usarse y mejore algo. También es innovar adaptar algo que ya existe a un lugar o una necesidad nueva.</p>
+        <p class="ex"><b>Ejemplo:</b> ponerle un motor eléctrico a la despulpadora de la finca para dejar la manivela.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Pon a prueba la diferencia</h3>
+    <p>Lee cada caso y decide. Esta práctica no tiene nota.</p>
+    <div class="sorter" id="sorter"></div>
+  </div>
+
+  <div class="block">
+    <h3>¿Qué cambia? Tipos de innovación</h3>
+    <div class="duo">
+      <div class="card">
+        <span class="label">De producto</span>
+        <p>Un bien o un servicio nuevo o mejorado.</p>
+        <p class="ex"><b>Ejemplo:</b> una aplicación para que los campesinos publiquen su cosecha y los compradores la vean.</p>
+      </div>
+      <div class="card">
+        <span class="label">De proceso</span>
+        <p>Una forma nueva o mejor de producir o de hacer algo.</p>
+        <p class="ex"><b>Ejemplo:</b> cambiar el riego con manguera por riego por goteo con temporizador.</p>
+      </div>
+      <div class="card">
+        <span class="label">De modelo o de mercadeo</span>
+        <p>Cambia cómo se vende, cómo se llega al cliente o cómo se organiza el trabajo.</p>
+        <p class="ex"><b>Ejemplo:</b> una tienda que empieza a recibir pedidos por WhatsApp y a cobrar con código QR.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>¿Cuánto cambia? Grado de novedad</h3>
+    <div class="scale">
+      <div class="scale-bar" aria-hidden="true"></div>
+      <div class="scale-ends"><span>Cambio pequeño</span><span>Cambio grande</span></div>
+    </div>
+    <div class="duo">
+      <div class="card">
+        <span class="label">Incremental</span>
+        <p>Mejoras pequeñas y seguidas sobre algo que ya existe.</p>
+        <p class="ex"><b>Ejemplo:</b> la nueva versión del celular con mejor batería y mejor cámara.</p>
+      </div>
+      <div class="card">
+        <span class="label">Radical</span>
+        <p>Algo muy distinto a lo anterior, con una tecnología diferente.</p>
+        <p class="ex"><b>Ejemplo:</b> pasar del bombillo incandescente al bombillo LED.</p>
+      </div>
+      <div class="card">
+        <span class="label">Disruptiva</span>
+        <p>Cambia las reglas del mercado y desplaza lo que había. Muchas veces empieza más sencilla y más barata.</p>
+        <p class="ex"><b>Ejemplo:</b> la fotografía digital frente al rollo, o mandar plata desde el celular sin ir al banco.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>¿De dónde salen las innovaciones?</h3>
+    <ul>
+      <li>De un <b>problema que se repite</b>: el fríjol se moja cada vez que llueve en época de cosecha.</li>
+      <li>De una <b>necesidad que nadie atiende</b>: en la vereda no hay quién arregle celulares.</li>
+      <li>De un <b>conocimiento o una tecnología nueva</b>: sensores baratos, impresión 3D, inteligencia artificial.</li>
+      <li>De un <b>cambio en el entorno</b>: el clima, los precios, una ley nueva, la llegada de internet.</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <h3>El ciclo de la innovación</h3>
+    <p>Innovar se hace por pasos, y cuando una prueba falla se vuelve atrás a ajustar. Los contenidos que siguen en el periodo (gestión de proyectos y prototipos) trabajan sobre este mismo ciclo.</p>
+    <ol class="cycle">
+      <li><span class="n">1</span><b>Detectar la necesidad</b><span>¿Qué problema hay y a quién le pasa?</span></li>
+      <li><span class="n">2</span><b>Generar ideas</b><span>Muchas ideas primero, escoger después.</span></li>
+      <li><span class="n">3</span><b>Diseñar y prototipar</b><span>Una versión sencilla que se pueda probar.</span></li>
+      <li><span class="n">4</span><b>Probar con usuarios</b><span>Ver si sirve y qué falla.</span></li>
+      <li><span class="n">5</span><b>Mejorar y adoptar</b><span>Ajustar y lograr que la gente lo use.</span></li>
+    </ol>
+  </div>
+
+  <div class="nav-bottom">
+    <span></span>
+    <button class="btn" data-go="emprendimiento">Seguir con emprendimiento →</button>
+  </div>
+</section>
+
+<!-- ============ 2. EMPRENDIMIENTO ============ -->
+<section class="panel" id="sec-emprendimiento" data-title="Emprendimiento tecnológico" hidden>
+  <div class="block">
+    <span class="label">Contenido 2</span>
+    <h2>Emprendimiento tecnológico</h2>
+    <p>Emprender es ver una oportunidad y organizar personas, tiempo y recursos para convertirla en algo que funcione: un negocio, un servicio o un proyecto para la comunidad. El emprendimiento es tecnológico cuando la tecnología está en el centro de lo que se ofrece o de la forma de hacerlo.</p>
+    <p>En Colombia, la Ley 1014 de 2006 fomenta la cultura del emprendimiento y pide a los colegios formar a los estudiantes en ella. Por eso este tema hace parte del área.</p>
+  </div>
+
+  <div class="block">
+    <h3>Tradicional y tecnológico</h3>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Necesidad</th><th>Emprendimiento tradicional</th><th>Emprendimiento tecnológico</th></tr></thead>
+        <tbody>
+          <tr><td>Comprar el mercado</td><td>Tienda de barrio</td><td>Pedidos por aplicación con domicilio</td></tr>
+          <tr><td>Saber cuándo sembrar</td><td>Preguntarle al vecino con experiencia</td><td>Estación meteorológica con alertas al celular</td></tr>
+          <tr><td>Aprender un oficio</td><td>Curso presencial en el pueblo</td><td>Cursos cortos en video que funcionan sin conexión</td></tr>
+          <tr><td>Vender la cosecha</td><td>Llevarla al intermediario</td><td>Catálogo digital y venta directa al consumidor</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Rappi, por ejemplo, empezó en Bogotá en 2015 como una aplicación de domicilios. El servicio de domicilio ya existía; lo nuevo fue organizarlo alrededor del celular.</p>
+  </div>
+
+  <div class="block">
+    <h3>Una idea no siempre es una oportunidad</h3>
+    <div class="duo">
+      <div class="card">
+        <span class="label">Idea</span>
+        <p>Algo que se te ocurre. Puede ser buena o mala, pero todavía no sabes si alguien la necesita.</p>
+        <p class="ex"><b>Ejemplo:</b> "Hacer una app para la vereda".</p>
+      </div>
+      <div class="card">
+        <span class="label">Oportunidad</span>
+        <p>Una idea que pasa estas cuatro preguntas:</p>
+        <ul class="ex">
+          <li>¿Resuelve un problema real?</li>
+          <li>¿Hay personas que lo viven y lo usarían o pagarían?</li>
+          <li>¿Se puede hacer con los recursos que tenemos?</li>
+          <li>¿Es mejor que lo que la gente usa hoy?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Lo que hace un emprendedor</h3>
+    <div class="duo">
+      <div class="card"><span class="label">Iniciativa</span><p>Empieza sin esperar a que todo esté perfecto.</p></div>
+      <div class="card"><span class="label">Tolerancia al error</span><p>Prueba, falla, entiende por qué y ajusta.</p></div>
+      <div class="card"><span class="label">Trabajo en equipo</span><p>Reconoce lo que sabe cada uno y reparte tareas.</p></div>
+      <div class="card"><span class="label">Comunicación</span><p>Explica su idea de forma clara a clientes y aliados.</p></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>La propuesta de valor</h3>
+    <p>Es la respuesta a una pregunta: <b>¿por qué el cliente te escogería a ti y no a lo que ya usa?</b> Se puede escribir con esta plantilla:</p>
+    <p class="key">Para <b>[cliente]</b> que <b>[problema]</b>, <b>[solución]</b> que <b>[beneficio]</b>, a diferencia de <b>[lo que usan hoy]</b>.</p>
+    <p class="ex"><b>Ejemplo:</b> Para las familias del casco urbano que quieren comprar fríjol y huevos frescos de la vereda, <i>Cosecha Directa</i> es un catálogo por WhatsApp con entrega dos veces por semana que les ahorra el viaje y les garantiza producto del día, a diferencia de comprar en el mercado del pueblo solo los domingos.</p>
+  </div>
+
+  <div class="block">
+    <h3>El lienzo: el emprendimiento en una hoja</h3>
+    <p>Un lienzo resume en bloques cómo va a funcionar la idea. Este es el ejemplo de <i>Cosecha Directa</i> en seis bloques:</p>
+    <div class="canvas">
+      <div class="cell"><span class="label">Cliente</span>Familias del casco urbano de San Juanito.</div>
+      <div class="cell"><span class="label">Problema</span>Solo consiguen producto fresco de la vereda el día de mercado.</div>
+      <div class="cell"><span class="label">Solución</span>Catálogo semanal y pedidos por WhatsApp.</div>
+      <div class="cell"><span class="label">Canal</span>Grupo de WhatsApp y entrega en moto martes y viernes.</div>
+      <div class="cell"><span class="label">Ingresos</span>Venta directa con un pequeño recargo por domicilio.</div>
+      <div class="cell"><span class="label">Recursos clave</span>Productores aliados, un celular, una moto y una lista de precios.</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Producto mínimo viable (PMV)</h3>
+    <p>Antes de gastar en una aplicación, prueba la idea con la versión más sencilla posible y con usuarios reales. Lo que buscas es aprender rápido y gastando poco.</p>
+    <ul>
+      <li><b>Qué construyes:</b> lo mínimo que muestre la idea. Una hoja impresa, un formulario, un grupo de WhatsApp.</li>
+      <li><b>Con quién lo pruebas:</b> pocas personas que sí tienen el problema.</li>
+      <li><b>Qué mides:</b> un dato concreto. ¿Cuántos pidieron? ¿Cuántos repitieron?</li>
+      <li><b>Qué decides:</b> seguir, ajustar o cambiar de idea.</li>
+    </ul>
+    <p class="ex"><b>Ejemplo:</b> la primera semana de <i>Cosecha Directa</i> fue una lista escrita a mano enviada a diez vecinos. Seis pidieron y cuatro repitieron. Con ese dato decidieron seguir.</p>
+  </div>
+
+  <div class="nav-bottom">
+    <button class="btn ghost" data-go="innovacion">← Innovación</button>
+    <button class="btn" data-go="taller">Ir al taller →</button>
+  </div>
+</section>
+
+<!-- ============ 3. TALLER ============ -->
+<section class="panel" id="sec-taller" data-title="Taller" hidden>
+  <div class="block">
+    <span class="label">Taller · 40 puntos · 60 % de la nota</span>
+    <h2>Taller: de la idea a la oportunidad</h2>
+    <p>Responde con tus propias palabras. Lo que escribes se guarda solo en este computador mientras trabajas, pero solo cuenta lo que entregues en el archivo final.</p>
+  </div>
+  <div id="taller" style="display:grid;gap:18px"></div>
+  <div class="nav-bottom">
+    <button class="btn ghost" data-go="emprendimiento">← Emprendimiento</button>
+    <button class="btn" data-go="quiz">Ir al quiz →</button>
+  </div>
+</section>
+
+<!-- ============ 4. QUIZ ============ -->
+<section class="panel" id="sec-quiz" data-title="Quiz" hidden>
+  <div class="block">
+    <span class="label">Quiz · 10 preguntas · 40 % de la nota</span>
+    <h2>Quiz</h2>
+    <p>Tienes un solo intento. Cuando envíes el quiz verás tu puntaje y las respuestas correctas, y ya no podrás cambiarlas.</p>
+  </div>
+  <form id="quiz" style="display:grid;gap:14px"></form>
+  <div id="quiz-actions" class="row">
+    <button class="btn" id="send-quiz" type="button">Enviar quiz</button>
+    <span class="small" id="quiz-count"></span>
+  </div>
+  <div id="quiz-msg"></div>
+  <div class="nav-bottom">
+    <button class="btn ghost" data-go="taller">← Taller</button>
+    <button class="btn" data-go="entrega">Ir a la entrega →</button>
+  </div>
+</section>
+
+<!-- ============ 5. ENTREGA ============ -->
+<section class="panel" id="sec-entrega" data-title="Entrega" hidden>
+  <div class="block">
+    <span class="label">Entrega</span>
+    <h2>Descarga tu archivo de respuestas</h2>
+    <p>Llena tus datos y descarga el archivo. Es una página web (.html) con todas tus respuestas. Entrégasela al profesor por el medio que él indique: memoria USB, correo o carpeta compartida.</p>
+  </div>
+  <div class="form">
+    <div class="field"><label for="est-nombre">Nombre completo</label><input type="text" id="est-nombre" autocomplete="name" placeholder="Nombres y apellidos"></div>
+    <div class="field"><label for="est-grupo">Grupo</label><input type="text" id="est-grupo" placeholder="Ej.: 10-1"></div>
+    <div class="field"><label for="est-fecha">Fecha</label><input type="date" id="est-fecha"></div>
+  </div>
+  <div class="card">
+    <span class="label">Cómo vas</span>
+    <ul class="status" id="status"></ul>
+  </div>
+  <div class="row">
+    <button class="btn" id="dl" type="button">Descargar mis respuestas (.html)</button>
+    <button class="btn ghost" id="open" type="button">Abrir el archivo en otra pestaña</button>
+  </div>
+  <p class="small">Si la descarga no arranca, usa "Abrir el archivo en otra pestaña" y guárdalo con Ctrl + S.</p>
+  <div id="dl-msg"></div>
+
+  <div class="card" style="gap:12px">
+    <span class="label">Computador compartido</span>
+    <p>Cuando ya descargaste tu archivo, borra tus respuestas para que el siguiente compañero empiece en limpio.</p>
+    <div class="row" id="reset-row">
+      <button class="btn warn" id="reset" type="button">Borrar mis respuestas</button>
+    </div>
+    <div class="row" id="reset-confirm" hidden>
+      <span>¿Seguro? Esto no se puede deshacer.</span>
+      <button class="btn warn" id="reset-yes" type="button">Sí, borrar todo</button>
+      <button class="btn ghost" id="reset-no" type="button">Cancelar</button>
+    </div>
+  </div>
+  <div class="nav-bottom">
+    <button class="btn ghost" data-go="quiz">← Quiz</button>
+    <span></span>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer><div class="wrap">Tecnología e Informática · Grado 10° · Periodo 4 · Eje: innovación, emprendimiento y gestión de proyectos tecnológicos · Docente Kevin Castillo</div></footer>
+
+<script>
+(function(){
+"use strict";
+var KEY = "jfk_tyi10_p4_c12_v1";
+
+var SECTIONS = [
+  {id:"innovacion", name:"Innovación"},
+  {id:"emprendimiento", name:"Emprendimiento"},
+  {id:"taller", name:"Taller"},
+  {id:"quiz", name:"Quiz"},
+  {id:"entrega", name:"Entrega"}
+];
+
+var SORT = [
+  {t:"Una persona crea por primera vez un dispositivo que convierte la luz del sol en electricidad.", a:"Invento", why:"Es algo que no existía. Todavía no dice que alguien lo esté usando."},
+  {t:"Una escuela rural instala paneles solares para tener luz en la sala de sistemas.", a:"Innovación", why:"Usa una tecnología que ya existía para resolver un problema real en ese lugar."},
+  {t:"Un agricultor cambia el riego con manguera por riego por goteo con temporizador.", a:"Innovación", why:"Es una innovación de proceso: cambia la forma de regar y le ahorra agua y tiempo."},
+  {t:"Un laboratorio patenta un material que nunca había existido.", a:"Invento", why:"La patente protege la creación, pero eso no significa que ya se use."},
+  {t:"La tienda del pueblo empieza a cobrar con código QR desde el celular.", a:"Innovación", why:"Adopta una tecnología existente y cambia la forma de cobrar a sus clientes."}
+];
+
+var TALLER = [
+  {parte:"Parte A · Innovación tecnológica"},
+  {id:"A1", titulo:"Invento o innovación",
+   enunciado:"Explica con tus palabras la diferencia entre un invento y una innovación. Luego da un ejemplo de innovación que hayas visto en San Juanito, en tu vereda o en tu casa.",
+   fields:[{id:"A1a",label:"Diferencia entre invento e innovación",rows:4},{id:"A1b",label:"Tu ejemplo y por qué es innovación",rows:3}]},
+  {id:"A2", titulo:"Análisis de caso: el secador solar",
+   caso:"En una vereda de San Juanito, una familia secaba el fríjol sobre lonas en el patio. Cada vez que llovía tenían que correr a recogerlo y parte de la cosecha se dañaba. Con guadua y plástico de invernadero construyeron un secador solar con ventilación lateral. Ahora el grano se seca aunque llueva y tarda menos.",
+   enunciado:"Lee el caso y responde.",
+   fields:[{id:"A2a",label:"a) ¿Qué necesidad o problema resuelve el secador?",rows:3},{id:"A2b",label:"b) ¿Es innovación de producto o de proceso? ¿Es incremental, radical o disruptiva? Justifica las dos respuestas.",rows:4},{id:"A2c",label:"c) Escribe una limitación o un riesgo del secador y cómo lo mejorarías.",rows:3}]},
+  {id:"A3", titulo:"Tu propia innovación",
+   enunciado:"Piensa en un problema real de tu colegio, tu finca o tu comunidad que la tecnología podría ayudar a resolver. Usa los primeros pasos del ciclo de la innovación.",
+   fields:[{id:"A3a",label:"El problema, en una o dos frases",rows:2},{id:"A3b",label:"¿A quién le pasa y cada cuánto?",rows:2},{id:"A3c",label:"Tu idea de solución",rows:3},{id:"A3d",label:"¿Qué tipo de innovación es (producto, proceso o modelo) y qué grado de novedad tiene?",rows:2},{id:"A3e",label:"¿Cómo sabrías que tu idea sí funcionó? Escribe algo que se pueda medir.",rows:2}]},
+  {parte:"Parte B · Emprendimiento tecnológico"},
+  {id:"B1", titulo:"De idea a oportunidad",
+   enunciado:"Escribe una idea de emprendimiento tecnológico. Después revísala con las cuatro preguntas de la oportunidad y responde cada una con honestidad.",
+   fields:[{id:"B1a",label:"Tu idea",rows:2},{id:"B1b",label:"¿Resuelve un problema real? ¿Hay personas que la usarían o pagarían? ¿Se puede hacer con lo que tienes? ¿Es mejor que lo que existe?",rows:5}]},
+  {id:"B2", titulo:"Propuesta de valor",
+   enunciado:"Completa la plantilla con tu idea (puede ser la misma de B1). Abajo verás la frase completa mientras escribes.",
+   fields:[{id:"B2a",label:"Para (cliente)",rows:1},{id:"B2b",label:"que (problema que tienen)",rows:2},{id:"B2c",label:"(nombre y descripción corta de tu solución)",rows:2},{id:"B2d",label:"que (beneficio principal)",rows:2},{id:"B2e",label:"a diferencia de (lo que usan hoy)",rows:2}],
+   preview:true},
+  {id:"B3", titulo:"Mini lienzo",
+   enunciado:"Resume tu emprendimiento en los seis bloques del lienzo, como en el ejemplo de Cosecha Directa.",
+   fields:[{id:"B3a",label:"Cliente",rows:2},{id:"B3b",label:"Problema",rows:2},{id:"B3c",label:"Solución",rows:2},{id:"B3d",label:"Canal (cómo llegas al cliente)",rows:2},{id:"B3e",label:"Ingresos o sostenimiento",rows:2},{id:"B3f",label:"Recursos clave",rows:2}]},
+  {id:"B4", titulo:"Tu producto mínimo viable",
+   enunciado:"Tienes una semana y menos de $50.000 para probar tu idea con personas reales.",
+   fields:[{id:"B4a",label:"¿Qué construirías? (lo más sencillo posible)",rows:2},{id:"B4b",label:"¿Con quién lo probarías y cuántas personas?",rows:2},{id:"B4c",label:"¿Qué dato medirías y qué resultado te haría seguir adelante?",rows:3}]},
+  {id:"B5", titulo:"Reflexión personal",
+   enunciado:"Revisa las habilidades del emprendedor que viste en la explicación.",
+   fields:[{id:"B5a",label:"Dos habilidades que ya tienes, con un ejemplo de cuándo las usaste",rows:3},{id:"B5b",label:"Una habilidad que te falta desarrollar y qué harías para mejorarla",rows:3}]}
+];
+
+var QUIZ = [
+  {q:"¿Cuál es la diferencia principal entre un invento y una innovación?",
+   o:["El invento es más caro que la innovación","La innovación llega a usarse y genera valor; el invento puede quedarse sin uso","La innovación siempre necesita internet","El invento solo lo hacen empresas grandes"], a:1,
+   e:"Lo que define a la innovación es que se usa y le sirve a alguien."},
+  {q:"Una familia cambia el secado del grano en el patio por un secador solar que reduce el tiempo de secado. ¿Qué tipo de innovación es?",
+   o:["De producto","De mercadeo","De proceso","No es innovación"], a:2,
+   e:"Cambia la forma de hacer algo (secar), por eso es de proceso."},
+  {q:"¿Qué describe mejor una innovación incremental?",
+   o:["Un cambio que desplaza a toda una industria","Mejoras pequeñas y seguidas sobre algo que ya existe","Un invento que nadie había visto","Una idea que todavía no se ha probado"], a:1,
+   e:"Incremental significa mejorar poco a poco lo que ya existe."},
+  {q:"¿Cuál de estos casos es el mejor ejemplo de innovación disruptiva?",
+   o:["Un celular igual al anterior pero de otro color","Una cuchara con un mango un poco más largo","Pagos desde el celular que permiten mover dinero sin ir al banco","Un cuaderno con más hojas"], a:2,
+   e:"Cambió la forma en que mucha gente maneja su dinero y desplazó prácticas anteriores."},
+  {q:"En el ciclo de la innovación, ¿cuál es el primer paso?",
+   o:["Construir el prototipo","Vender el producto","Detectar la necesidad o el problema","Pedir un préstamo"], a:2,
+   e:"Sin un problema claro no hay qué resolver."},
+  {q:"¿Qué hace que un emprendimiento sea tecnológico?",
+   o:["Que la tecnología esté en el centro de lo que ofrece o de cómo lo hace","Que tenga una página en redes sociales","Que lo dirija un ingeniero","Que venda computadores"], a:0,
+   e:"Tener redes sociales no basta: la tecnología tiene que ser parte central de la propuesta."},
+  {q:"Una idea se convierte en oportunidad cuando...",
+   o:["Al emprendedor le gusta mucho","Resuelve un problema real que viven personas dispuestas a usarla o pagarla, y se puede hacer","Nadie más la ha pensado","Necesita mucha inversión"], a:1,
+   e:"La oportunidad depende del problema real y de las personas que lo viven, no del gusto del emprendedor."},
+  {q:"La propuesta de valor responde principalmente a la pregunta:",
+   o:["¿Cuánto cuesta fabricar el producto?","¿Cuántos empleados tendrá la empresa?","¿Por qué el cliente te escogería a ti y no a lo que ya usa?","¿Dónde queda la oficina?"], a:2,
+   e:"Es lo que te diferencia para el cliente."},
+  {q:"¿Qué es un producto mínimo viable (PMV)?",
+   o:["La versión final y perfecta del producto","La versión más sencilla que permite probar la idea con usuarios reales y aprender","El producto más barato del mercado","Un dibujo del logo"], a:1,
+   e:"El PMV sirve para aprender rápido y gastando poco."},
+  {q:"En Colombia, la Ley 1014 de 2006 tiene que ver con...",
+   o:["El fomento de la cultura del emprendimiento, incluso desde los colegios","La regulación de las tarifas de internet","El uso de celulares en el aula","Los derechos de autor del software"], a:0,
+   e:"Es la ley de fomento a la cultura del emprendimiento."}
+];
+
+var LETTERS = ["A","B","C","D"];
+
+var state = {est:{nombre:"",grupo:"",fecha:""}, t:{}, q:{ans:[], sent:false}, sort:{}};
+function load(){
+  try{ var raw = localStorage.getItem(KEY); if(raw){ var o = JSON.parse(raw);
+    state.est = o.est || state.est; state.t = o.t || {}; state.q = o.q || state.q; state.sort = o.sort || {}; } }catch(e){}
+  if(!Array.isArray(state.q.ans)) state.q.ans = [];
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} updateStatus(); }
+
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function $(s){ return document.querySelector(s); }
+function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+
+/* ---------- Navegación ---------- */
+var current = "innovacion";
+function renderSteps(){
+  var h = "";
+  SECTIONS.forEach(function(s, i){
+    var done = (s.id === "taller" && countFilled().done === countFilled().total) || (s.id === "quiz" && state.q.sent);
+    h += '<button class="step" data-go="'+s.id+'" aria-current="'+(s.id===current)+'"><span class="n">'+(i+1)+'</span>'+s.name+(done?' <span class="done">✓</span>':'')+'</button>';
+  });
+  $("#steps").innerHTML = h;
+}
+function go(id){
+  current = id;
+  SECTIONS.forEach(function(s){ document.getElementById("sec-"+s.id).hidden = (s.id !== id); });
+  renderSteps();
+  window.scrollTo(0,0);
+}
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-go]");
+  if(b){ go(b.getAttribute("data-go")); }
+});
+
+/* ---------- Clasificador ---------- */
+function renderSorter(){
+  var h = "";
+  SORT.forEach(function(it, i){
+    var pick = state.sort[i];
+    var fb = "";
+    if(pick){ var ok = pick === it.a;
+      fb = '<div class="fb '+(ok?"ok":"bad")+'">'+(ok?"Correcto. ":"No es "+esc(pick).toLowerCase()+". ")+esc(it.why)+'</div>'; }
+    h += '<div class="sort-item"><p>'+esc(it.t)+'</p><div class="btns">'+
+      '<button type="button" class="chip" data-sort="'+i+'" data-pick="Invento">Invento</button>'+
+      '<button type="button" class="chip" data-sort="'+i+'" data-pick="Innovación">Innovación</button></div>'+fb+'</div>';
+  });
+  $("#sorter").innerHTML = h;
+}
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-sort]");
+  if(!b) return;
+  state.sort[b.getAttribute("data-sort")] = b.getAttribute("data-pick");
+  save(); renderSorter();
+});
+
+/* ---------- Taller ---------- */
+function allFields(){ var f = []; TALLER.forEach(function(it){ if(it.fields) it.fields.forEach(function(x){ f.push(x); }); }); return f; }
+function countFilled(){ var f = allFields(); var d = 0; f.forEach(function(x){ if((state.t[x.id]||"").trim().length >= 3) d++; }); return {done:d, total:f.length}; }
+
+function renderTaller(){
+  var h = "";
+  TALLER.forEach(function(it){
+    if(it.parte){ h += '<h3 class="parte">'+esc(it.parte)+'</h3>'; return; }
+    h += '<article class="item"><header><span class="code">'+it.id+'</span><h3>'+esc(it.titulo)+'</h3><span class="pts">5 puntos</span></header>';
+    h += '<p>'+esc(it.enunciado)+'</p>';
+    if(it.caso) h += '<div class="caso">'+esc(it.caso)+'</div>';
+    it.fields.forEach(function(f){
+      h += '<div class="field"><label for="f-'+f.id+'">'+esc(f.label)+'</label><textarea id="f-'+f.id+'" data-k="'+f.id+'" rows="'+(f.rows||3)+'">'+esc(state.t[f.id]||"")+'</textarea></div>';
+    });
+    if(it.preview) h += '<div><span class="label">Tu propuesta de valor</span><p class="preview" id="pv"></p></div>';
+    h += '</article>';
+  });
+  $("#taller").innerHTML = h;
+  updatePreview();
+}
+function valueProp(){
+  var g = function(k, ph){ var v = (state.t[k]||"").trim(); return v ? esc(v) : '<span class="small">['+ph+']</span>'; };
+  return "Para "+g("B2a","cliente")+" que "+g("B2b","problema")+", "+g("B2c","solución")+" que "+g("B2d","beneficio")+", a diferencia de "+g("B2e","lo que usan hoy")+".";
+}
+function updatePreview(){ var p = $("#pv"); if(p) p.innerHTML = valueProp(); }
+var saveTimer;
+document.addEventListener("input", function(e){
+  var k = e.target.getAttribute && e.target.getAttribute("data-k");
+  if(k){ state.t[k] = e.target.value; if(k.indexOf("B2")===0) updatePreview(); clearTimeout(saveTimer); saveTimer = setTimeout(function(){ save(); renderSteps(); }, 300); }
+});
+
+/* ---------- Quiz ---------- */
+function quizScore(){ var c = 0; QUIZ.forEach(function(q, i){ if(state.q.ans[i] === q.a) c++; }); return c; }
+function renderQuiz(){
+  var sent = state.q.sent, h = "";
+  QUIZ.forEach(function(q, i){
+    h += '<fieldset class="q"><legend><span class="n">'+String(i+1).padStart(2,"0")+'</span><span>'+esc(q.q)+'</span></legend>';
+    q.o.forEach(function(o, j){
+      var cls = "";
+      if(sent){ if(j === q.a) cls = " correct"; else if(state.q.ans[i] === j) cls = " wrong"; }
+      h += '<label class="opt'+cls+'"><input type="radio" name="q'+i+'" value="'+j+'"'+(state.q.ans[i]===j?" checked":"")+(sent?" disabled":"")+'><span><b>'+LETTERS[j]+'.</b> '+esc(o)+'</span></label>';
+    });
+    if(sent) h += '<div class="fb '+(state.q.ans[i]===q.a?"ok":"bad")+'">'+(state.q.ans[i]===q.a?"Correcta. ":"Incorrecta. La respuesta es la "+LETTERS[q.a]+". ")+esc(q.e)+'</div>';
+    h += '</fieldset>';
+  });
+  $("#quiz").innerHTML = h;
+  $("#quiz-actions").hidden = sent;
+  if(sent){
+    var c = quizScore();
+    $("#quiz-msg").innerHTML = '<div class="score"><span class="big">'+c+' / 10</span><span>Nota del quiz: <b>'+(Math.max(1, c/2)).toFixed(1)+'</b>. Ya quedó registrado en tu archivo de entrega.</span></div>';
+  }
+  updateQuizCount();
+}
+function updateQuizCount(){
+  var n = 0; for(var i=0;i<QUIZ.length;i++) if(typeof state.q.ans[i] === "number") n++;
+  var el = $("#quiz-count"); if(el) el.textContent = n+" de "+QUIZ.length+" respondidas";
+}
+document.addEventListener("change", function(e){
+  if(e.target.name && /^q\d+$/.test(e.target.name) && !state.q.sent){
+    state.q.ans[parseInt(e.target.name.slice(1),10)] = parseInt(e.target.value,10);
+    save(); updateQuizCount();
+  }
+});
+$("#send-quiz").addEventListener("click", function(){
+  var miss = []; for(var i=0;i<QUIZ.length;i++) if(typeof state.q.ans[i] !== "number") miss.push(i+1);
+  if(miss.length){ $("#quiz-msg").innerHTML = '<p class="msg bad">Te falta responder: '+miss.join(", ")+'.</p>'; return; }
+  state.q.sent = true; state.q.when = new Date().toISOString(); save(); renderQuiz(); renderSteps();
+});
+
+/* ---------- Entrega ---------- */
+function todayISO(){ var d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function bindStudent(){
+  if(!state.est.fecha) state.est.fecha = todayISO();
+  [["nombre","#est-nombre"],["grupo","#est-grupo"],["fecha","#est-fecha"]].forEach(function(p){
+    var el = $(p[1]); el.value = state.est[p[0]] || "";
+    el.addEventListener("input", function(){ state.est[p[0]] = el.value; save(); });
+  });
+}
+function updateStatus(){
+  var el = $("#status"); if(!el) return;
+  var c = countFilled(), h = "";
+  h += '<li><span class="dot '+(state.est.nombre.trim().length>4?"ok":"")+'"></span>Nombre: '+(state.est.nombre.trim()?esc(state.est.nombre):"sin escribir")+'</li>';
+  h += '<li><span class="dot '+(c.done===c.total?"ok":(c.done?"half":""))+'"></span>Taller: '+c.done+' de '+c.total+' respuestas escritas</li>';
+  h += '<li><span class="dot '+(state.q.sent?"ok":"")+'"></span>Quiz: '+(state.q.sent?"enviado, "+quizScore()+" de 10":"sin enviar")+'</li>';
+  el.innerHTML = h;
+}
+
+function fileName(){
+  var n = (state.est.nombre||"estudiante").normalize("NFD").replace(/[̀-ͯ]/g,"").trim().replace(/[^A-Za-z0-9]+/g,"_").replace(/^_|_$/g,"");
+  return "Taller_P4_Innovacion_Emprendimiento_"+(n||"estudiante")+".html";
+}
+
+function buildReport(){
+  var e = state.est, c = quizScore();
+  var items = "";
+  TALLER.forEach(function(it){
+    if(it.parte){ items += '<h2>'+esc(it.parte)+'</h2>'; return; }
+    items += '<div class="it"><div class="ih"><span class="code">'+it.id+'</span><h3>'+esc(it.titulo)+'</h3></div>';
+    items += '<p class="en">'+esc(it.enunciado)+'</p>';
+    if(it.caso) items += '<p class="caso">'+esc(it.caso)+'</p>';
+    it.fields.forEach(function(f){
+      var v = (state.t[f.id]||"").trim();
+      items += '<div class="qa"><div class="ql">'+esc(f.label)+'</div><div class="ans'+(v?"":" empty")+'">'+(v?esc(v):"(sin respuesta)")+'</div></div>';
+    });
+    if(it.preview) items += '<div class="qa"><div class="ql">Frase completa</div><div class="ans">'+valueProp().replace(/<span class="small">/g,"<span>")+'</div></div>';
+    items += '<div class="grade"><label>Puntaje (0 a 5) <input class="p" type="number" min="0" max="5" step="0.5" inputmode="decimal" id="p-'+it.id+'"></label>'+
+      '<label class="cm">Comentario <textarea rows="2" id="c-'+it.id+'"></textarea></label></div></div>';
+  });
+
+  var qrows = "";
+  QUIZ.forEach(function(q, i){
+    var a = state.q.ans[i], ok = a === q.a;
+    qrows += '<tr><td>'+(i+1)+'</td><td>'+esc(q.q)+'</td><td>'+(typeof a==="number"?LETTERS[a]+". "+esc(q.o[a]):"(sin responder)")+'</td><td>'+LETTERS[q.a]+". "+esc(q.o[q.a])+'</td><td class="'+(ok?"ok":"no")+'">'+(ok?"✓":"✗")+'</td></tr>';
+  });
+
+  var css = 'body{font:15px/1.5 "Segoe UI",system-ui,sans-serif;color:#17231E;background:#F3F6F4;margin:0}'+
+    '.page{max-width:900px;margin:0 auto;padding:24px 16px 60px}'+
+    'header.doc{background:#fff;border:1px solid #CAD7CF;border-top:6px solid #2E6B45;border-radius:8px;padding:18px 20px;display:grid;gap:6px}'+
+    'h1{font-size:22px;margin:0}h2{font-size:17px;margin:28px 0 10px;color:#2E6B45;border-bottom:1px solid #CAD7CF;padding-bottom:4px}h3{font-size:16px;margin:0}'+
+    '.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 18px}.grid b{color:#55665E;font-weight:600}'+
+    '.sum{background:#fff;border:2px solid #2E6B45;border-radius:8px;padding:14px 18px;margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}'+
+    '.sum div{display:grid}.sum span{font-size:12px;color:#55665E;text-transform:uppercase;letter-spacing:.06em}.sum strong{font-size:24px;font-variant-numeric:tabular-nums}'+
+    '#pend{grid-column:1/-1;font-size:14px;color:#9A6B0C}'+
+    '.it{background:#fff;border:1px solid #CAD7CF;border-radius:8px;padding:14px 16px;margin:12px 0;display:grid;gap:10px}'+
+    '.ih{display:flex;gap:10px;align-items:center}.code{background:#2E6B45;color:#fff;font:600 12px monospace;padding:2px 7px;border-radius:4px}'+
+    '.en{margin:0;color:#55665E}.caso{margin:0;background:#E6EEE9;padding:10px 12px;border-radius:6px;font-size:14px}'+
+    '.qa{display:grid;gap:3px}.ql{font-weight:600;font-size:14px}.ans{white-space:pre-wrap;background:#F8FAF9;border-left:3px solid #9A6B0C;padding:8px 10px;border-radius:0 6px 6px 0}.ans.empty{color:#B3261E;font-style:italic}'+
+    '.grade{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;background:#F5EACB;padding:10px 12px;border-radius:6px}.grade label{display:grid;gap:3px;font-weight:600;font-size:13px}.grade .cm{flex:1;min-width:200px}'+
+    'input.p{width:90px;font-size:18px;padding:6px 8px;border:1px solid #9A6B0C;border-radius:6px}textarea{font:inherit;padding:6px 8px;border:1px solid #CAD7CF;border-radius:6px;width:100%;box-sizing:border-box}'+
+    '.tb{overflow-x:auto;background:#fff;border:1px solid #CAD7CF;border-radius:8px}table{border-collapse:collapse;width:100%;min-width:600px;font-size:14px}th,td{padding:8px 10px;border-bottom:1px solid #E1E9E4;text-align:left;vertical-align:top}th{background:#E6EEE9}'+
+    'td.ok{color:#2E7D4F;font-weight:700;font-size:18px}td.no{color:#B3261E;font-weight:700;font-size:18px}'+
+    '.bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.bar button{font:inherit;font-weight:700;padding:9px 16px;border-radius:6px;border:1px solid #2E6B45;background:#2E6B45;color:#fff;cursor:pointer}.bar button.g{background:#fff;color:#2E6B45}'+
+    '.note{font-size:13px;color:#55665E}.final{margin-top:12px;font-size:15px}'+
+    '@media print{.bar,.note{display:none}body{background:#fff}.it,.sum,header.doc{break-inside:avoid}}';
+
+  var js = '(function(){var QC='+c+',NI=8;'+
+    'function lvl(n){return n>=4.6?"Superior":n>=4.0?"Alto":n>=3.0?"Básico":"Bajo";}'+
+    'function r(){var s=0,k=0;document.querySelectorAll("input.p").forEach(function(i){var v=parseFloat(String(i.value).replace(",","."));if(!isNaN(v)){v=Math.max(0,Math.min(5,v));s+=v;k++;}});'+
+    'var nt=s/(NI*5)*5,nq=QC/10*5,nf=Math.max(1,0.6*nt+0.4*nq);'+
+    'document.getElementById("s-t").textContent=s+" / 40";document.getElementById("n-t").textContent=nt.toFixed(1);'+
+    'document.getElementById("n-f").textContent=nf.toFixed(1);document.getElementById("l-f").textContent=lvl(nf);'+
+    'document.getElementById("pend").textContent=k<NI?"Faltan "+(NI-k)+" ítems del taller por calificar. La nota final cambia cuando los califiques.":"Taller calificado completo.";}'+
+    'document.addEventListener("input",r);r();'+
+    'document.getElementById("save").addEventListener("click",function(){document.querySelectorAll("input").forEach(function(i){i.setAttribute("value",i.value)});'+
+    'document.querySelectorAll("textarea").forEach(function(t){t.textContent=t.value});'+
+    'var h="<!doctype html>\\n"+document.documentElement.outerHTML;var b=new Blob([h],{type:"text/html;charset=utf-8"});'+
+    'var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=document.body.getAttribute("data-file").replace(/\\.html$/,"")+"_CALIFICADO.html";document.body.appendChild(a);a.click();a.remove();});'+
+    'document.getElementById("pr").addEventListener("click",function(){window.print();});})();';
+
+  var when = new Date();
+  var stamp = when.toLocaleDateString("es-CO")+" "+when.toLocaleTimeString("es-CO",{hour:"2-digit",minute:"2-digit"});
+
+  return '<!doctype html>\n<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'+
+    '<title>Taller P4 · '+esc(e.nombre||"Estudiante")+'</title><style>'+css+'</style></head>'+
+    '<body data-file="'+esc(fileName())+'"><div class="page">'+
+    '<header class="doc"><span class="note">IE John F. Kennedy · San Juanito, Meta · Tecnología e Informática</span>'+
+    '<h1>Taller y quiz · Innovación y emprendimiento tecnológico</h1>'+
+    '<div class="grid"><div><b>Estudiante:</b> '+esc(e.nombre||"(sin nombre)")+'</div><div><b>Grupo:</b> '+esc(e.grupo||"—")+'</div>'+
+    '<div><b>Fecha:</b> '+esc(e.fecha||"—")+'</div><div><b>Grado / periodo:</b> 10° · Periodo 4 · 2026</div>'+
+    '<div><b>Archivo generado:</b> '+esc(stamp)+'</div><div><b>Docente:</b> Kevin Castillo</div></div></header>'+
+    '<div class="sum">'+
+    '<div><span>Taller</span><strong id="s-t">0 / 40</strong></div>'+
+    '<div><span>Nota taller (60 %)</span><strong id="n-t">0.0</strong></div>'+
+    '<div><span>Quiz</span><strong>'+c+' / 10</strong></div>'+
+    '<div><span>Nota quiz (40 %)</span><strong>'+(c/2).toFixed(1)+'</strong></div>'+
+    '<div><span>Nota final</span><strong id="n-f">1.0</strong></div>'+
+    '<div><span>Desempeño</span><strong id="l-f">Bajo</strong></div>'+
+    '<div id="pend"></div></div>'+
+    '<div class="bar"><button id="save" type="button">Guardar copia calificada</button><button id="pr" class="g" type="button">Imprimir</button></div>'+
+    '<p class="note">Califique cada ítem de 0 a 5 en los recuadros amarillos. La nota se calcula sola: 60 % taller y 40 % quiz, en escala de 1.0 a 5.0. "Guardar copia calificada" descarga este mismo archivo con sus puntajes y comentarios.</p>'+
+    '<h2>Quiz'+(state.q.sent?"":" (el estudiante no lo envió)")+'</h2>'+
+    '<div class="tb"><table><thead><tr><th>#</th><th>Pregunta</th><th>Respuesta del estudiante</th><th>Correcta</th><th></th></tr></thead><tbody>'+qrows+'</tbody></table></div>'+
+    items+
+    '<div class="it"><div class="ih"><h3>Observación general</h3></div><textarea rows="3" id="obs"></textarea></div>'+
+    '</div><script>'+js+'<\/script></body></html>';
+}
+
+var lastUrl = null;
+function makeUrl(){
+  if(lastUrl) URL.revokeObjectURL(lastUrl);
+  lastUrl = URL.createObjectURL(new Blob([buildReport()], {type:"text/html;charset=utf-8"}));
+  return lastUrl;
+}
+function check(){
+  var problems = [];
+  if(state.est.nombre.trim().length < 5) problems.push("escribe tu nombre completo");
+  if(!state.est.grupo.trim()) problems.push("escribe tu grupo");
+  return problems;
+}
+function warnings(){
+  var w = [], c = countFilled();
+  if(c.done < c.total) w.push("te faltan "+(c.total-c.done)+" respuestas del taller");
+  if(!state.q.sent) w.push("no has enviado el quiz");
+  return w;
+}
+$("#dl").addEventListener("click", function(){
+  var p = check();
+  if(p.length){ $("#dl-msg").innerHTML = '<p class="msg bad">Antes de descargar, '+p.join(" y ")+'.</p>'; return; }
+  var a = document.createElement("a"); a.href = makeUrl(); a.download = fileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  var w = warnings();
+  $("#dl-msg").innerHTML = '<p class="msg ok">Se descargó <b>'+esc(fileName())+'</b>. Búscalo en la carpeta Descargas.'+(w.length?' Ojo: '+w.join(" y ")+'. Si completas lo que falta, vuelve a descargar.':'')+'</p>';
+});
+$("#open").addEventListener("click", function(){
+  var p = check();
+  if(p.length){ $("#dl-msg").innerHTML = '<p class="msg bad">Antes de abrir el archivo, '+p.join(" y ")+'.</p>'; return; }
+  var win = window.open(makeUrl(), "_blank");
+  if(!win) $("#dl-msg").innerHTML = '<p class="msg bad">El navegador bloqueó la pestaña nueva. Permite las ventanas emergentes para esta página e intenta otra vez.</p>';
+});
+$("#reset").addEventListener("click", function(){ $("#reset-row").hidden = true; $("#reset-confirm").hidden = false; });
+$("#reset-no").addEventListener("click", function(){ $("#reset-row").hidden = false; $("#reset-confirm").hidden = true; });
+$("#reset-yes").addEventListener("click", function(){
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  state = {est:{nombre:"",grupo:"",fecha:todayISO()}, t:{}, q:{ans:[], sent:false}, sort:{}};
+  ["#est-nombre","#est-grupo"].forEach(function(s){ $(s).value = ""; }); $("#est-fecha").value = state.est.fecha;
+  renderSorter(); renderTaller(); renderQuiz(); $("#quiz-msg").innerHTML = ""; $("#dl-msg").innerHTML = '<p class="msg ok">Respuestas borradas. El computador quedó listo para el siguiente estudiante.</p>';
+  $("#reset-row").hidden = false; $("#reset-confirm").hidden = true;
+  save(); renderSteps();
+});
+
+/* ---------- Inicio ---------- */
+load();
+renderSorter(); renderTaller(); renderQuiz(); bindStudent(); updateStatus(); renderSteps();
+})();
+</script>
+</body>
+</html>
